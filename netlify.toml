@@ -10,10 +10,18 @@
 [functions.getAnalyticsData]
   timeout = 60
 
+[functions.getAnalyticsData-new]
+  timeout = 30
+
 [dev]
   publish = "static-analytics"
   functions = "netlify/functions"
   
+[[redirects]]
+  from = "/api/getAnalyticsData"
+  to = "/.netlify/functions/getAnalyticsData-new"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

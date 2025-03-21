@@ -336,7 +336,7 @@
                 
                 try {
                     // Call the serverless function to fetch the latest data
-                    const response = await fetch('/.netlify/functions/getAnalyticsData');
+                    const response = await fetch('/.netlify/functions/getAnalyticsData-new');
                     
                     if (!response.ok) {
                         throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
@@ -344,7 +344,12 @@
                     
                     const data = await response.json();
                     
-                    // Update the dashboard with the new data
+                    // Check if we got sample data and show a notification
+                    if (data.isRealData === false) {
+                        alert('Notice: Displaying sample data. ' + (data.message || 'Live data scraping is currently unavailable.'));
+                    }
+                    
+                    // Update the dashboard with the data
                     updateDashboardWithLiveData(data);
                     
                     // Update last updated timestamp
