@@ -336,7 +336,7 @@
                 
                 try {
                     // Call the completely new function with unique name
-                    const fetchUrl = '/api/sample-data?t=' + new Date().getTime();
+                    const fetchUrl = '/api/sample-data?refresh=true&t=' + new Date().getTime();
                     console.log('Fetching data from API endpoint:', fetchUrl);
                     
                     const response = await fetch(fetchUrl);
@@ -348,15 +348,19 @@
                     const data = await response.json();
                     
                     // Verify the source to make sure we're getting data from the right function
-                    if (data.source === 'SAMPLE_DATA_PROVIDER') {
-                        console.log('Successfully retrieved data from sample_data_provider function');
+                    if (data.source === 'ANALYTICS_SCRAPER') {
+                        console.log('Successfully retrieved live data from GetAllMyLinks!');
+                    } else if (data.source === 'ANALYTICS_SCRAPER_FALLBACK') {
+                        console.warn('Using fallback sample data due to error:', data.error);
                     } else {
-                        console.warn('Data received but not from expected source:', data);
+                        console.warn('Data received but not from expected source:', data.source);
                     }
                     
                     // Check if we got sample data and show a notification
                     if (data.isRealData === false) {
-                        alert('Notice: ' + (data.message || 'Displaying sample data. Live data scraping is currently unavailable.'));
+                        alert('Notice: ' + (data.message || 'Using sample data. Live data scraping failed: ' + (data.error || 'Unknown error')));
+                    } else {
+                        console.log('Successfully loaded real data from GetAllMyLinks');
                     }
                     
                     // Update the dashboard with the data
