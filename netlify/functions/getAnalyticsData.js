@@ -40,12 +40,15 @@ exports.handler = async function(event, context) {
     }
     
     console.log('Starting browser with chromium...');
+    console.log('Chromium version:', await chromium.version());
+    
     // Launch browser with improved configuration for Netlify
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
       headless: chromium.headless,
+      ignoreHTTPSErrors: true
     });
     
     // Create a new page
