@@ -29,8 +29,8 @@
             
             try {
                 // Add a cache-busting timestamp
-                const url = `/.netlify/functions/sample_data_provider?t=${Date.now()}`;
-                console.log('Calling function at:', url);
+                const url = `/api/sample-data?t=${Date.now()}`;
+                console.log('Calling API endpoint at:', url);
                 
                 const res = await fetch(url);
                 

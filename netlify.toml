@@ -13,13 +13,16 @@
 [functions.getAnalyticsData-new]
   timeout = 30
 
+[functions.sample_data_provider]
+  timeout = 30
+
 [dev]
   publish = "static-analytics"
   functions = "netlify/functions"
   
-# Force all analytics functions to use the new endpoint
+# Rewrite all API paths to the appropriate functions
 [[redirects]]
-  from = "/.netlify/functions/getAnalyticsData"
+  from = "/api/analytics"
   to = "/.netlify/functions/getAnalyticsData-new"
   status = 200
   force = true
@@ -27,6 +30,12 @@
 [[redirects]]
   from = "/api/getAnalyticsData"
   to = "/.netlify/functions/getAnalyticsData-new"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/sample-data"
+  to = "/.netlify/functions/sample_data_provider"
   status = 200
   force = true
 

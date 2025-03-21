@@ -336,8 +336,8 @@
                 
                 try {
                     // Call the completely new function with unique name
-                    const fetchUrl = '/.netlify/functions/sample_data_provider?t=' + new Date().getTime();
-                    console.log('Fetching data from new function:', fetchUrl);
+                    const fetchUrl = '/api/sample-data?t=' + new Date().getTime();
+                    console.log('Fetching data from API endpoint:', fetchUrl);
                     
                     const response = await fetch(fetchUrl);
                     
