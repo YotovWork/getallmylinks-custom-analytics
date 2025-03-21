@@ -4,7 +4,11 @@
   "description": "Custom analytics dashboard for GetAllMyLinks",
   "main": "index.js",
   "scripts": {
-    "start": "netlify dev"
+    "start": "node local-dev.js",
+    "dev": "netlify dev",
+    "build": "echo 'No build step required for static site'",
+    "test": "node -e \"require('http').createServer((req, res) => { res.writeHead(200, {'Content-Type': 'text/plain'}); res.end('Function test server running'); }).listen(9000, () => console.log('Test server running on port 9000'))\"",
+    "deploy": "netlify deploy --prod"
   },
   "keywords": [
     "getallmylinks",
@@ -14,10 +18,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sparticuz/chromium": "^121.0.0",
-    "puppeteer-core": "^22.0.0"
+    "@sparticuz/chromium": "119.0.0",
+    "puppeteer-core": "19.7.5"
   },
   "devDependencies": {
-    "netlify-cli": "^17.15.3"
+    "netlify-cli": "^17.15.3",
+    "dotenv": "^16.0.3"
   }
 }
