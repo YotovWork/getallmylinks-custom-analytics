@@ -1,0 +1,19 @@
+[build]
+  publish = "static-analytics"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["node_modules/@sparticuz/chromium/lib/**"]
+  
+[functions.getAnalyticsData]
+  timeout = 60
+
+[dev]
+  publish = "static-analytics"
+  functions = "netlify/functions"
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 

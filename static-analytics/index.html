@@ -1,0 +1,481 @@
+<!-- Updated version with improved scraper - Force rebuild -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetAllMyLinks Analytics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .trend {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        .trend-up {
+            color: #28a745;
+        }
+        .trend-down {
+            color: #dc3545;
+        }
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+        }
+        .table-container {
+            margin-top: 30px;
+        }
+        .platform-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>GetAllMyLinks Analytics</h1>
+            <p class="text-muted">Custom analytics view for your links</p>
+            <button id="refreshButton" class="btn btn-primary mb-4">
+                <i id="refreshIcon" class="fas fa-sync-alt me-2"></i> Refresh Analytics Data
+            </button>
+            <div id="loadingIndicator" class="d-none mb-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="ms-2">Fetching latest data from GetAllMyLinks...</span>
+            </div>
+            <div id="lastUpdated" class="text-muted small mb-3">Last updated: Never</div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="card-title">TOTAL CLICKS</div>
+                    <div class="card-value">32,546</div>
+                    <div class="trend trend-up">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                        </svg>
+                        8.2% vs last month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="card-title">UNIQUE VISITORS</div>
+                    <div class="card-value">14,259</div>
+                    <div class="trend trend-up">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                        </svg>
+                        5.7% vs last month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="card-title">AVG. SESSION DURATION</div>
+                    <div class="card-value">2m 34s</div>
+                    <div class="trend trend-up">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                        </svg>
+                        12.3% vs last month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="card-title">CONVERSION RATE</div>
+                    <div class="card-value">3.8%</div>
+                    <div class="trend trend-down">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                        </svg>
+                        1.2% vs last month
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traffic Over Time Chart -->
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+
+        <!-- Top Links Table -->
+        <div class="table-container">
+            <h3>Top Performing Links</h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Link Title</th>
+                        <th>URL</th>
+                        <th>Clicks</th>
+                        <th>Conversion Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Instagram Profile</td>
+                        <td>instagram.com/yourprofile</td>
+                        <td>8,452</td>
+                        <td>4.2%</td>
+                    </tr>
+                    <tr>
+                        <td>YouTube Channel</td>
+                        <td>youtube.com/c/yourchannel</td>
+                        <td>6,789</td>
+                        <td>3.9%</td>
+                    </tr>
+                    <tr>
+                        <td>Twitter/X Profile</td>
+                        <td>twitter.com/yourhandle</td>
+                        <td>5,124</td>
+                        <td>3.5%</td>
+                    </tr>
+                    <tr>
+                        <td>TikTok Profile</td>
+                        <td>tiktok.com/@yourhandle</td>
+                        <td>4,987</td>
+                        <td>2.8%</td>
+                    </tr>
+                    <tr>
+                        <td>Personal Website</td>
+                        <td>yourwebsite.com</td>
+                        <td>3,921</td>
+                        <td>5.2%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Traffic Sources Chart -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h3>Traffic Sources</h3>
+                    <canvas id="sourcesChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h3>Device Breakdown</h3>
+                    <canvas id="devicesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - will be replaced with real data when refresh button is clicked
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const trafficData = [2500, 3200, 3800, 4200, 4800, 5300, 6100, 7200, 8500, 9200, 10800, 12500];
+        const uniqueVisitors = [1200, 1600, 1900, 2100, 2400, 2650, 3050, 3600, 4250, 4600, 5400, 6250];
+
+        // Chart references
+        let trafficChart, sourcesChart, devicesChart;
+        
+        // Initialize charts with sample data
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            setupRefreshButton();
+        });
+        
+        function initializeCharts() {
+            // Traffic Over Time Chart
+            const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+            trafficChart = new Chart(trafficCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Total Clicks',
+                            data: trafficData,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Unique Visitors',
+                            data: uniqueVisitors,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Traffic Over Time' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Traffic Sources Chart
+            const sourcesCtx = document.getElementById('sourcesChart').getContext('2d');
+            sourcesChart = new Chart(sourcesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Instagram', 'Twitter/X', 'TikTok', 'YouTube', 'Direct', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 15, 10, 10, 5],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+
+            // Devices Chart
+            const devicesCtx = document.getElementById('devicesChart').getContext('2d');
+            devicesChart = new Chart(devicesCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Mobile', 'Desktop', 'Tablet', 'Other'],
+                    datasets: [{
+                        data: [68, 25, 6, 1],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(201, 203, 207, 0.8)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+        }
+        
+        function setupRefreshButton() {
+            const refreshButton = document.getElementById('refreshButton');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const lastUpdated = document.getElementById('lastUpdated');
+            
+            refreshButton.addEventListener('click', async function() {
+                // Show loading state
+                refreshButton.disabled = true;
+                document.getElementById('refreshIcon').classList.add('fa-spin');
+                loadingIndicator.classList.remove('d-none');
+                
+                try {
+                    // Call the serverless function to fetch the latest data
+                    const response = await fetch('/.netlify/functions/getAnalyticsData');
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Update the dashboard with the new data
+                    updateDashboardWithLiveData(data);
+                    
+                    // Update last updated timestamp
+                    const now = new Date();
+                    lastUpdated.textContent = `Last updated: ${now.toLocaleString()}`;
+                    
+                    // Store the data in localStorage for persistence
+                    localStorage.setItem('analyticsData', JSON.stringify({
+                        data: data,
+                        timestamp: now.toISOString()
+                    }));
+                    
+                } catch (error) {
+                    console.error('Error fetching analytics data:', error);
+                    alert(`Failed to fetch the latest data: ${error.message}`);
+                } finally {
+                    // Reset UI state
+                    refreshButton.disabled = false;
+                    document.getElementById('refreshIcon').classList.remove('fa-spin');
+                    loadingIndicator.classList.add('d-none');
+                }
+            });
+            
+            // Check if we have cached data
+            const cachedData = localStorage.getItem('analyticsData');
+            if (cachedData) {
+                try {
+                    const { data, timestamp } = JSON.parse(cachedData);
+                    updateDashboardWithLiveData(data);
+                    lastUpdated.textContent = `Last updated: ${new Date(timestamp).toLocaleString()}`;
+                } catch (e) {
+                    console.error('Error parsing cached data:', e);
+                }
+            }
+        }
+        
+        function updateDashboardWithLiveData(data) {
+            // Update summary stats
+            updateSummaryStats(data);
+            
+            // Update traffic chart
+            updateTrafficChart(data);
+            
+            // Update top links table
+            updateTopLinksTable(data);
+            
+            // Update device breakdown
+            updateDeviceChart(data);
+            
+            // Update sources chart (if available)
+            // This might need custom handling depending on how the data is structured
+        }
+        
+        function updateSummaryStats(data) {
+            // Update total clicks
+            const totalClicksElement = document.querySelector('.col-md-3:nth-child(1) .card-value');
+            if (data.totalVisits) {
+                totalClicksElement.textContent = data.totalVisits;
+            }
+            
+            // Update unique visitors
+            const uniqueVisitorsElement = document.querySelector('.col-md-3:nth-child(2) .card-value');
+            if (data.uniqueVisitors) {
+                uniqueVisitorsElement.textContent = data.uniqueVisitors;
+            }
+            
+            // Other stats may need custom handling depending on the structure
+        }
+        
+        function updateTrafficChart(data) {
+            if (data.trafficOverTime && trafficChart) {
+                // Update labels and data points
+                trafficChart.data.labels = data.trafficOverTime.labels || months;
+                
+                // Update data if available
+                if (data.trafficOverTime.values) {
+                    trafficChart.data.datasets[0].data = data.trafficOverTime.values;
+                    
+                    // If we have both clicks and visitors, update second dataset
+                    if (data.trafficOverTime.visitorValues) {
+                        trafficChart.data.datasets[1].data = data.trafficOverTime.visitorValues;
+                    }
+                }
+                
+                trafficChart.update();
+            }
+        }
+        
+        function updateTopLinksTable(data) {
+            if (data.links && data.links.length > 0) {
+                const tableBody = document.querySelector('.table-container tbody');
+                tableBody.innerHTML = ''; // Clear existing rows
+                
+                data.links.forEach(link => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${link.title || 'Unknown'}</td>
+                        <td>${link.url || 'N/A'}</td>
+                        <td>${link.clicks || '0'}</td>
+                        <td>${link.conversionRate || 'N/A'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+        
+        function updateDeviceChart(data) {
+            if (data.devices && devicesChart) {
+                // Parse percentages from strings like "68%" to numbers
+                const parsePercentage = str => {
+                    if (!str) return 0;
+                    return parseInt(str.replace('%', ''));
+                };
+                
+                // Get device percentages
+                const mobilePercentage = parsePercentage(data.devices.mobile);
+                const desktopPercentage = parsePercentage(data.devices.desktop);
+                const tabletPercentage = parsePercentage(data.devices.tablet);
+                const otherPercentage = 100 - mobilePercentage - desktopPercentage - tabletPercentage;
+                
+                // Update chart data
+                devicesChart.data.datasets[0].data = [
+                    mobilePercentage, 
+                    desktopPercentage, 
+                    tabletPercentage,
+                    otherPercentage > 0 ? otherPercentage : 0
+                ];
+                
+                devicesChart.update();
+            }
+        }
+    </script>
+</body>
+</html> 

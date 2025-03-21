@@ -1,0 +1,23 @@
+{
+  "name": "getallmylinks-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Custom analytics dashboard for GetAllMyLinks",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "keywords": [
+    "getallmylinks",
+    "analytics",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sparticuz/chromium": "^121.0.0",
+    "puppeteer-core": "^22.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.15.3"
+  }
+}
