@@ -18,8 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sparticuz/chromium": "116.0.0",
-    "puppeteer-core": "19.7.5"
+    "@sparticuz/chromium": "109.0.0",
+    "puppeteer-core": "19.4.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.15.3",
