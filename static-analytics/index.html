@@ -335,10 +335,9 @@
                 loadingIndicator.classList.remove('d-none');
                 
                 try {
-                    // Call the serverless function to fetch the latest data
-                    // Force use of new endpoint with cache-busting query parameter
-                    const fetchUrl = '/.netlify/functions/getAnalyticsData-new?t=' + new Date().getTime();
-                    console.log('Fetching data from:', fetchUrl);
+                    // Call the completely new function with unique name
+                    const fetchUrl = '/.netlify/functions/sample_data_provider?t=' + new Date().getTime();
+                    console.log('Fetching data from new function:', fetchUrl);
                     
                     const response = await fetch(fetchUrl);
                     
@@ -348,9 +347,16 @@
                     
                     const data = await response.json();
                     
+                    // Verify the source to make sure we're getting data from the right function
+                    if (data.source === 'SAMPLE_DATA_PROVIDER') {
+                        console.log('Successfully retrieved data from sample_data_provider function');
+                    } else {
+                        console.warn('Data received but not from expected source:', data);
+                    }
+                    
                     // Check if we got sample data and show a notification
                     if (data.isRealData === false) {
-                        alert('Notice: Displaying sample data. ' + (data.message || 'Live data scraping is currently unavailable.'));
+                        alert('Notice: ' + (data.message || 'Displaying sample data. Live data scraping is currently unavailable.'));
                     }
                     
                     // Update the dashboard with the data

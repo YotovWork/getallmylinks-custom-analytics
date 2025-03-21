@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Test Page</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        button { padding: 10px; margin: 10px 0; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Function Test Page</h1>
+    <p>This page tests if the Netlify function is working properly.</p>
+    
+    <button id="testButton">Test Sample Data Provider</button>
+    <div id="status"></div>
+    
+    <h3>Response:</h3>
+    <pre id="response">Click the button to see the response...</pre>
+    
+    <script>
+        document.getElementById('testButton').addEventListener('click', async () => {
+            const status = document.getElementById('status');
+            const response = document.getElementById('response');
+            
+            status.textContent = 'Testing function...';
+            
+            try {
+                // Add a cache-busting timestamp
+                const url = `/.netlify/functions/sample_data_provider?t=${Date.now()}`;
+                console.log('Calling function at:', url);
+                
+                const res = await fetch(url);
+                
+                if (!res.ok) {
+                    throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+                }
+                
+                const data = await res.json();
+                
+                // Display the full response
+                response.textContent = JSON.stringify(data, null, 2);
+                status.textContent = 'Function responded successfully!';
+                
+                if (data.source === 'SAMPLE_DATA_PROVIDER') {
+                    status.innerHTML += '<br><strong style="color:green">✓ Confirmed response is from our new function!</strong>';
+                } else {
+                    status.innerHTML += '<br><strong style="color:red">⚠ Response source not verified!</strong>';
+                }
+                
+            } catch (error) {
+                console.error('Error testing function:', error);
+                status.textContent = `Error: ${error.message}`;
+                response.textContent = error.toString();
+            }
+        });
+    </script>
+</body>
+</html> 
