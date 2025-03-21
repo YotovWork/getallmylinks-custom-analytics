@@ -17,10 +17,18 @@
   publish = "static-analytics"
   functions = "netlify/functions"
   
+# Force all analytics functions to use the new endpoint
+[[redirects]]
+  from = "/.netlify/functions/getAnalyticsData"
+  to = "/.netlify/functions/getAnalyticsData-new"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/api/getAnalyticsData"
   to = "/.netlify/functions/getAnalyticsData-new"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

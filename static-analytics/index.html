@@ -336,7 +336,11 @@
                 
                 try {
                     // Call the serverless function to fetch the latest data
-                    const response = await fetch('/.netlify/functions/getAnalyticsData-new');
+                    // Force use of new endpoint with cache-busting query parameter
+                    const fetchUrl = '/.netlify/functions/getAnalyticsData-new?t=' + new Date().getTime();
+                    console.log('Fetching data from:', fetchUrl);
+                    
+                    const response = await fetch(fetchUrl);
                     
                     if (!response.ok) {
                         throw new Error(`Server responded with ${response.status}: ${response.statusText}`);

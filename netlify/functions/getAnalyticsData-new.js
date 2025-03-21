@@ -1,6 +1,4 @@
-const chromium = require('@sparticuz/chromium');
-const puppeteer = require('puppeteer-core');
-
+// Simplified function that doesn't depend on Chromium/Puppeteer at all
 exports.handler = async function(event, context) {
   // Set CORS headers for browser requests
   const headers = {
@@ -17,40 +15,18 @@ exports.handler = async function(event, context) {
     };
   }
   
-  console.log('Function environment:', {
-    platform: process.platform,
-    arch: process.arch,
-    nodeVersion: process.version,
-    netlifyDev: process.env.NETLIFY_DEV,
-    functionName: context.functionName,
-    timeout: context.getRemainingTimeInMillis ? context.getRemainingTimeInMillis() : 'unknown'
+  console.log('Function called with event:', { 
+    path: event.path,
+    httpMethod: event.httpMethod,
+    queryParams: event.queryStringParameters,
+    timestamp: new Date().toISOString()
   });
   
   try {
-    // Check if credentials exist
-    const email = process.env.GETALLMYLINKS_EMAIL;
-    const password = process.env.GETALLMYLINKS_PASSWORD;
+    // No need to check credentials - we're just returning sample data
+    console.log('Returning sample data from getAnalyticsData-new function');
     
-    if (!email || !password) {
-      console.error('Missing credentials in environment variables');
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ 
-          error: 'Missing GetAllMyLinks credentials',
-          missingEmail: !email,
-          missingPassword: !password
-        })
-      };
-    }
-    
-    console.log('Preparing to launch browser...');
-    
-    // Instead of attempting to launch in the function, provide mock/sample data for now
-    // This helps verify if the rest of the application works correctly
-    
-    // Generate some plausible sample data
-    // Later we can replace this with real scraping once we solve the Chromium compatibility.
+    // Sample data that matches the expected format
     const sampleData = {
       totalVisits: "32,546",
       uniqueVisitors: "14,259",
@@ -74,11 +50,10 @@ exports.handler = async function(event, context) {
       },
       timestamp: new Date().toISOString(),
       isRealData: false,
-      message: "Sample data provided due to scraping issues. We're working on resolving the Chromium compatibility."
+      message: "THIS IS SAMPLE DATA. Real-time scraping has been temporarily disabled while we resolve technical issues."
     };
     
-    // Send the sample data for now
-    console.log('Returning sample data temporarily until scraping is fixed');
+    // Send the sample data
     return {
       statusCode: 200,
       headers,
@@ -87,13 +62,11 @@ exports.handler = async function(event, context) {
     
   } catch (error) {
     console.error('Error:', error.message);
-    console.error('Stack:', error.stack);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: `Function error: ${error.message}`,
-        stack: error.stack
+        error: `Function error: ${error.message}`
       })
     };
   }
